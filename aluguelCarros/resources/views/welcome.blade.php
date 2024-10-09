@@ -4,39 +4,51 @@
 
 @section('content')
 
+<style>
+    #search {
+        width: 90%;
+        border-radius: 10;
+    }
+    .col-md-12{
+        margin-left: 20px;
+    }
+    </style>
+
+<div id="search-container" class="col-md-12">
+    <h1>Escolha seu carro</h1>
+    <form action="/" method="get">
+        <input type="text" id="search" name="search" class="form-control" placeholder="Escolha..." >
+    </form>
     
-    <h1>--Algum titulo</h1>
-
-    <img src="/img/banner.jpg" alt="Banner">
-
-    @if (10>5)
-        <p>--A condição é verdadeira</p>
-    @endif
-
-    <p>--O nome dele é {{$nome}}</p>
-
-    @if ($nome == 'João')
-        <p>--O nome é João</p>
+</div>
+<div id="cars-container" class="col-md-12">
+    @if ($search)
+        <h2>Buscando por: {{$search}}</h2>
     @else
-        <p>--O nome não é João</p>
+        <h2>Carros da empresa: </h2>
     @endif
-
-    @if ($idade == 22)
-        <p>--Ele tem 22 anos</p>
-    @else
-        <p>--Ele não tem 22 anos</p>
-    @endif
-
-    @for ($i=0;$i<count($arr);$i++)
-        <p>--{{$arr[$i] }} - {{$i}} </p>
-        @if ($i == 2)
-            <p>--O I é 2</p>
+    <p class="subtitle">Estes são nossos carros</p>
+    <div id="cards-container" class="row">
+        @foreach ($cars as $car)
+        @if ($car->rented == 0)        
+            <div class="card col-md-3"logo.jpg>
+                <img src="/img/cars/{{$car->image}}" alt="{{$car->name}}">
+                <div class="card-body">
+                    <p class="card-date">{{date('Y', strtotime($car->date))}}</p>
+                    <h5 class="card-name">{{$car->name}}</h5>
+                    <p class="card-unidades">R${{$car->value}}</p>
+                    <a href="/events/{{ $car->id}}" class="btn btn-primary">Saber mais</a>
+                    
+                </div>
+            </div>
         @endif
-    @endfor
-
-    @foreach ($nomes as $nome)
-        <p>--{{$loop->index}}</p>
-        <p>--{{$nome}}</p>
-    @endforeach
+        @endforeach
+        @if (count($cars)==0 && $search)
+            <p>Não estamos com o {{$search}} no momento! <a href="/">Voltar ao menu</a></p>
+        @elseif(count($cars)==0)
+            <p>Não temos carros no momento</p>
+        @endif
+    </div>
+</div>
 
 @endsection

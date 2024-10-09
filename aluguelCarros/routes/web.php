@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Models\Car;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,41 +12,29 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+use App\Http\Controllers\EventController;
 
-Route::get('/', function () {
+Route::get('/', [EventController::class, 'index']);
+Route::get('/events/cadastroCarro', [EventController::class, 'cadastroCarro'])->middleware('auth');
+Route::get('/events/{id}', [EventController::class, 'show']);
+Route::post('/events', [EventController::class, 'store']);
 
-    $nome = "Lucas";
-    $idade = 22;
-
-    $arr = [10,20,30,40,50];
-    $nomes = ['Lucas', 'Vitoria', 'Miguel'];
-
-    return view('welcome', ['nome'=>$nome, 'idade'=>$idade, 'arr'=>$arr, 'nomes'=>@$nomes]);
-});
 
 Route::get('/carros', function () {
 
-    $busca = request('search');
+    $cars = Car::all();
 
-    return view('carros', ['busca'=>$busca]);
+    return view('carros', ['cars'=>$cars]);
 });
 
-Route::get('/clientes', function () {
-    return view('clientes');
-});
 
-Route::get('/clienteT/{id?}', function ($id = null) {
-    return view('cliente', ['id'=>$id]);
-});
 
-Route::get('/carrosT/{id?}', function ($id = null) {
-    return view('carro', ['id'=>$id]);
-});
-
-Route::get('/funcionarios', function ($id = null) {
-    return view('funcionarios');
-});
-
-Route::get('/funcionariosT/{id?}', function ($id = null) {
-    return view('funcionario', ['id'=>$id]);
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 });

@@ -11,15 +11,11 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
         <!--CSS Botstrap -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <!--CSS projeto -->
-        <link rel="preconnect" href="/css/styles.css">
-        <style>
-            body {
-                font-family: 'Nunito', sans-serif;
-            }
-        </style>
-        <link rel="stylesheet" href="/css/styles.css">
+
+        <link rel="stylesheet" href="../../css/styles.css">
+        
         <script src="/js/scripts.js"></script>
     </head>
     <body>
@@ -34,18 +30,48 @@
                             <a href="/carros" class="nav-link">Carros</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/clientes" class="nav-link">Clientes</a>
+                            <a href="/events/cadastroCarro" class="nav-link">Cadastrar Carros</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="funcionarios" class="nav-link">Funcionarios</a> 
-                        </li>
+                        
+                        @guest
+                            <li class="nav-item">
+                                <a href="/login" class="nav-link">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/register" class="nav-link">Registrar-se</a>
+                            </li>
+                        @endguest
+                        @auth
+                            <li class="nav-item">
+                                <form action="/logout" method="post">
+                                    @csrf
+                                    <a 
+                                        href="/logout" 
+                                        class="nav-link"
+                                        onclick="event.preventDefault();
+                                        this.closest('form').submit();">   
+                                        Sair
+                                    </a>
+                                </form>
+                            </li>
+                        @endauth
                     </ul>
                 </div>
             </nav>
         </header>
-            @yield('content')
-            <footer>
+        <main>
+            <div class="container-fluid">
+                <div class="row">
+                    @if (session('msg'))
+                        <p class="msg">{{session('msg')}}</p>
+                    @endif
+                    @yield('content')
+                </div>
+            </div>
+        </main>    
+        
+        <footer class="footer">
                 <p>Aluguel de carros &copy;2024</p>
-            </footer>
+        </footer>
     </body>
 </html>
